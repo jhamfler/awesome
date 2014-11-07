@@ -4,8 +4,9 @@ if [[ $r == "" ]]; then
 else
   ~/.screenlayout/laptop.sh
 fi
+killall conky
 killall nm-applet
 nm-applet &
 cinnamon-sound-applet &
-conky &
 dropbox start
+conky &
