@@ -1,0 +1,156 @@
+# fork to backg
+background yes
+
+# grenzen
+border_width 0
+border_inner_margin 0
+border_outer_margin 0
+stippled_borders 0
+#leerzeichen links einfügen
+use_spacer left
+
+#experimentell
+default_bar_size 25 9 
+default_gauge_size 25 25
+default_graph_size 10 25
+
+#extra zeugs
+draw_shades no
+
+#musik
+#mpd server
+mpd_host
+mpd_password
+mpd_port
+
+#für awesome innerhalb einer wibox
+#extra_newline yes
+
+# performance
+update_interval 1.0
+update_interval_on_battery 2.0
+diskio_avg_samples 3
+cpu_avg_samples 3
+net_avg_samples 2
+#zeige RAM ohne Puffer an
+no_buffers no
+# einzelne cores
+
+#top
+top_cpu_separate yes
+top_name_width 15
+
+default_color 222222
+default_outline_color 222222
+draw_borders no
+draw_graph_borders yes
+draw_outline no
+draw_shades no
+use_xft yes
+xftfont Sans Mono:size=9
+
+out_to_console no
+out_to_stderr no
+extra_newline no
+
+# fensteroptionen
+alignment top_left
+own_window yes
+own_window_class Conky
+#own_window_colour ff0000
+own_window_transparent no
+#own_window_hints undecorated,below,sticky,skip_pager
+own_window_hints below,sticky,skip_pager
+minimum_size 1366 10
+maximum_width 1366
+gap_x 1
+gap_y 20
+#own_window_type desktop
+own_window_type override
+
+# flackern unterdrücken
+double_buffer yes
+
+stippled_borders 0
+uppercase no
+show_graph_scale no
+show_graph_range no
+format_human_readable yes
+own_window_transparent no
+
+#temperature_unit celsius
+#GiB -> G KiB -> k
+short_units no
+
+
+TEXT
+${color #0088bb}CPU0:${color #eeeeee}${cpubar cpu0 9,25} ${freq_g 1}\
+${color #0088bb} CPU1:${color #eeeeee}${cpubar cpu1 9,25} ${freq_g 2}\
+${color #0088bb} RAM:${color #eeeeee}${membar 9,25} ${mem}\
+${color #0088bb} Temp:${color #eeeeee}${exec sensors | grep "Core 0" |cut -c 16-22} \
+\
+${color #0088aa} Bat:${color #eeee00}\
+${if_match "${execi 10 .conkyskripte/charging.sh}"=="1"}${color #33ff33}${endif}\
+${if_match "${battery_percent CMB1}">="90"}${color #33ff33}${endif}\
+${battery_bar 9,25 CMB1}\
+\
+${color #0088bb} eth0: \
+${if_match "${addr}"=="No Address"}${color #ff3333}\
+${else}${color #33ff33}${endif}${addr}\
+\
+${if_match "${execi 10 .conkyskripte/wlan0-stat.sh}"=="up"}\
+${color #0088bb} SSID:${color #00ff00}${wireless_essid wlan0} \
+${color #0088bb} Link:${color #00ff00}${wireless_link_bar 9,25 wlan0} \
+${color #0088bb} IP:${color #00ff00}${execi 10 ./.conkyskripte/wlan0address.sh} \
+${color #0088bb} .11:${color #00ff00}${wireless_bitrate wlan0} \
+${color #0088bb} Down:${color #00ff00}${downspeedf wlan0}\
+${color #0088bb} Up:${color #00ff00}${upspeedf wlan0}\
+${endif}\
+\
+${color #0088bb} Vol: ${color #00ff00} ${execi 2 .conkyskripte/volume.sh} \
+${color #0088bb} Git: \
+${if_match "${execi 15 .conkyskripte/git-status.sh}"=="0"}${color #00ff00}\
+${else}${color #ff0000}${endif} conf\
+
+${color #0088bb}CPU2:${color #eeeeee}${cpubar cpu2 9,25} ${freq_g 3}\
+${color #0088bb} CPU3:${color #eeeeee}${cpubar cpu3 9,25} ${freq_g 4}\
+${color #0088bb} Puffer:${color #eeeeee}${buffers}\
+${color #0088bb}  Cache:${color #eeeeee}${cached}  \
+${color #0088bb} proc:${color #eeeeee}${running_processes}\
+${if_match "${execi 10 .conkyskripte/eth0-stat.sh}"=="up"}\
+${color #0088bb} eth0:${color #00ff00} ${execi 10 ethtool eth0 2>/dev/null | grep Speed | sed -e 's/^\tSpeed: \(.*Mb\/s\).*/\1/'}\
+${endif}\
+${color #0088bb} HDD-IO:${color #eeeeee}${diskio}\
+${color #0088bb} HDD:${color #eeeeee}${fs_bar} ${fs_used_perc}%\
+${color #0088bb} Kernel:${color #eeeeee}${kernel}\
+
+
+
+
+$nodename - $sysname $kernel on $machine
+$stippled_hr
+${color lightgrey}Uptime:$color $uptime ${color lightgrey}- Load:$color $loadavg
+${color lightgrey}CPU Usage:${color #5000a0} ${cpu}% ${cpubar}
+${color black}${cpugraph 000000 5000a0}
+${color lightgrey}RAM Usage:  ${membar 9,70} $color $mem/$memmax - $memperc%
+${color lightgrey}Swap Usage: ${swapbar 9,70} $color $swap/$swapmax - $swapperc%
+${color lightgrey}Processes:$color $processes  ${color grey}Running:$color $running_processes
+$color$stippled_hr
+${color lightgrey}Networking:
+ Down:${color #8844ee} ${downspeed eth0} k/s${color lightgrey} ${offset 70}Up:${color #22ccff} ${upspeed eth0} k/s
+${color black}${downspeedgraph eth0 32,150 ff0000 0000ff} ${color black}${upspeedgraph eth0 32,150 0000ff ff0000}
+${color lightgrey}File systems:
+ / $color${fs_used /}/${fs_size /} ${fs_bar 9,182}
+${color lightgrey}Temperatures:
+ CPU:$color ${i2c temp 2}C${color grey} - MB:$color ${i2c temp 1}C
+${font Dungeon:style=Bold:pixelsize=12}${color #88aadd}MPD: $mpd_artist - $mpd_title
+${color #88aadd}${mpd_bar 9,300}
+${color #88aadd}$mpd_status
+${color}Name              PID     CPU%   MEM%
+${color #ddaa00} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
+${color lightgrey} ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
+${color lightgrey} ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3}
+${color}Mem usage
+${color #ddaa00} ${top_mem name 1} ${top_mem pid 1} ${top_mem cpu 1} ${top_mem mem 1}
+${color lightgrey} ${top_mem name 2} ${top_mem pid 2} ${top_mem cpu 2} ${top_mem mem 2}
+${color lightgrey} ${top_mem name 3} ${top_mem pid 3} ${top_mem cpu 3} ${top_mem mem 3}${alignc}
