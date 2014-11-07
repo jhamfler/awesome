@@ -109,9 +109,10 @@ ${endif}\
 \
 ${color #0088bb} Vol: ${color #00ff00} ${execi 2 .conkyskripte/volume.sh} \
 ${color #0088bb} Git: \
-${if_match "${execi 15 .conkyskripte/git-status.sh}"=="0"}${color #00ff00}\
+${if_match "${execi 15 .conkyskripte/git-status-debconfsrv.sh}"=="0"}${color #00ff00}\
 ${else}${color #ff0000}${endif} conf\
-
+${if_match "${execi 15 .conkyskripte/git-status-awesome.sh}"=="0"}${color #00ff00}\
+${else}${color #ff0000}${endif} awm\
 ${color #0088bb}CPU2:${color #eeeeee}${cpubar cpu2 9,25} ${freq_g 3}\
 ${color #0088bb} CPU3:${color #eeeeee}${cpubar cpu3 9,25} ${freq_g 4}\
 ${color #0088bb} Puffer:${color #eeeeee}${buffers}\
