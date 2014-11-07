@@ -108,6 +108,7 @@ mysystray = widget({ type = "systray" })
 -- Create a wibox for each screen and add it
 mywibox = {}
 mystatusbar = awful.wibox({ position = "top", screen = s, ontop = false, width = 1, height = 35 })
+mystatusbar = awful.wibox({ position = "left", screen = s, ontop = false, width = 1, height = 35 })
 mypromptbox = {}
 mylayoutbox = {}
 mytaglist = {}
