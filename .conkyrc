@@ -40,7 +40,7 @@ top_name_width 20
 #leerzeichen links einfügen
 use_spacer yes
 
-default_color 444444
+default_color 666666
 default_outline_color 222222
 draw_borders no
 draw_graph_borders yes
