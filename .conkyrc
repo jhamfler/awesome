@@ -30,8 +30,8 @@ update_interval_on_battery 2.0
 diskio_avg_samples 3
 cpu_avg_samples 3
 net_avg_samples 1
-#zeige RAM mit Puffer an
-no_buffers no
+#zeige RAM ohne Puffer an
+no_buffers yes
 
 # einzelne cores
 #top
@@ -104,6 +104,7 @@ ${color #0088bb} CPU1:${color #eeeeee}${cpubar cpu1 9,25} ${freq_g 2}\
 ${color #0088bb} RAM:${color #eeeeee}${membar 9,25} ${mem}\
 ${color #0088bb} Temp:${color #eeeeee}\
 \
+\
 ${if_match ${acpitemp}>=1}${acpitemp} C \
 ${else}\
 \
@@ -115,6 +116,7 @@ ${if_match "${execi 5 sensors | grep "Core0"|awk '{print $3}'|cut -c 2-6}">="1"}
 ${execi 5 sensors | grep "Core0"|awk '{print $3}'|cut -c 2-6}C\
 ${else}${color #bb2222}noDev\
 ${endif}${endif}${endif}\
+\
 \
 ${color #0088aa}  Bat:${color #eeee00}\
 ${if_match "${execi 10 .conkyskripte/charging.sh}"=="1"}${color #33ff33}${endif}\
@@ -152,6 +154,8 @@ ${color #0088bb}  eth0:${color #00ff00}${execi 15 ethtool eth0 2>/dev/null | gre
 ${endif}\
 ${color #0088bb} proc:${color #eeeeee}${running_processes}\
 ${color #0088bb} Kernel:${color #eeeeee}${kernel}\
+\
+\
 
 
 $nodename - $sysname $kernel on $machine
@@ -161,21 +165,21 @@ ${color lightgrey}Uptime:$color $uptime ${color lightgrey}- Load:$color $loadavg
 ${color lightgrey}CPU Usage:${color #5000a0} ${cpu}%  ${color lightgrey}Processes:$color $processes ${color grey}Running: $color $running_processes
 ${cpubar 9,350}
 ${color black}${cpugraph 32,350 000000 5000a0}
-${color lightgrey}RAM Usage:     $color $mem/$memmax - $memperc%
-${color lightgrey}${membar 9,350}
-${color lightgrey}Swap Usage:    $color $swap/$swapmax - $swapperc%
-${color lightgrey}${swapbar 9,350}
-${color lightgrey}Buffer Usage:  $color $buffers/$memmax
-${execibar 10 ./.conkyskripte/buffer.sh}
-${color lightgrey}Cache Usage:   $color $cached/$memmax
-${execibar 10 ./.conkyskripte/cache.sh}
+${color lightgrey}RAM    Total:  $color ${execi 10 top -n 1 -b|grep Mem:|awk '{print $5/1024/1024}'|cut -c 1-4}GiB/$memmax
+${color lightgrey}${execibar 10 top -n 1 -b|grep Mem:|awk '{print $5/$3*100.}'}
+${color red}Swap   Usage:  $color $swap/$swapmax - $swapperc%
+${color red}${swapbar 9,350}
+${color #2bff55}RAM    Progs:  $color $mem/$memmax - $memperc%
+${color #2bff55}${membar 9,350}
+${color #2b55ff}Buffer Usage:  $color $buffers/$memmax
+${color #2b55ff}${execibar 10 ./.conkyskripte/buffer.sh}
+${color orange}Cache  Usage:  $color $cached/$memmax
+${color orange}${execibar 10 ./.conkyskripte/cache.sh}
 $color$stippled_hr
-${color lightgrey}Networking:
- Down:${color #8844ee} ${downspeed eth0} ${color lightgrey} ${offset 60}Up:${color #22ccff} ${upspeed eth0}
-${color black}${downspeedgraph eth0 32,170 ff0000 0000ff}${offset 10}${color black}${upspeedgraph eth0 32,170 ff0000 0000ff}
+${color lightgrey}Network: Down:${color #8844ee} ${downspeed eth0} ${color lightgrey} ${offset 65}Up:${color #22ccff} ${upspeed eth0}
+${color black}${downspeedgraph eth0 32,170 442277 8844ee}${offset 10}${color black}${upspeedgraph eth0 32,170 11667f 22ccff}
 ${color lightgrey}File systems:  $color${fs_used /}/${fs_size /} - ${fs_used_perc}%
 ${fs_bar 9,350}
-${color lightgrey}Temperatures: CPU:$color ${acpitemp}C${color grey} - MB:$color ${i2c temp 1}C
 ${color #88aadd}MPD: $mpd_artist - $mpd_title
 ${color #88aadd}${mpd_bar 9,350}
 ${color #88aadd}$mpd_status
@@ -189,5 +193,3 @@ ${color   #ddaa00} ${top_mem name 1} ${top_mem pid 1}  ${top_mem cpu 1}  ${top_m
 ${color lightgrey} ${top_mem name 2} ${top_mem pid 2}  ${top_mem cpu 2}  ${top_mem mem 2}
 ${color lightgrey} ${top_mem name 3} ${top_mem pid 3}  ${top_mem cpu 3}  ${top_mem mem 3}
 ${color lightgrey} ${top_mem name 4} ${top_mem pid 4}  ${top_mem cpu 4}  ${top_mem mem 4}
-
-
