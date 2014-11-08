@@ -148,7 +148,7 @@ $nodename - $sysname $kernel on $machine
 Entropie: ${entropy_bar 9,270}
 $stippled_hr
 ${color lightgrey}Uptime:$color $uptime ${color lightgrey}- Load:$color $loadavg
-${color lightgrey}CPU Usage:${color #5000a0} ${cpu}%   ${color lightgrey}Processes:$color $processes  ${color grey}Running: $color $running_processes
+${color lightgrey}CPU Usage:${color #5000a0} ${cpu}%  ${color lightgrey}Processes:$color $processes ${color grey}Running: $color $running_processes
 ${cpubar 9,350}
 ${color black}${cpugraph 32,350 000000 5000a0}
 ${color lightgrey}RAM Usage:     $color $mem/$memmax - $memperc%
