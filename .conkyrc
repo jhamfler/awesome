@@ -102,7 +102,15 @@ TEXT
 ${color #0088bb}CPU0:${color #eeeeee}${cpubar cpu0 9,25} ${freq_g 1}\
 ${color #0088bb} CPU1:${color #eeeeee}${cpubar cpu1 9,25} ${freq_g 2}\
 ${color #0088bb} RAM:${color #eeeeee}${membar 9,25} ${mem}\
-${color #0088bb} Temp:${color #eeeeee}${execi 5 sensors | grep "Core 0"|awk '{print $3}'|cut -c 2-6}C\
+${color #0088bb} Temp:${color #eeeeee}\
+\
+${if_match ${execi 5 sensors | grep "Core 0"|awk '{print $3}'|cut -c 2-6}>="1"}\
+${execi 5 sensors | grep "Core 0"|awk '{print $3}'|cut -c 2-6}C\
+${else}
+${if_match ${execi 5 sensors | grep "Core0"|awk '{print $3}'|cut -c 2-6}>="1"}\
+${execi 5 sensors | grep "Core0"|awk '{print $3}'|cut -c 2-6}C\
+${else}${acpitemp}C  \
+${endif}${endif}\
 \
 ${color #0088aa}  Bat:${color #eeee00}\
 ${if_match "${execi 10 .conkyskripte/charging.sh}"=="1"}${color #33ff33}${endif}\
