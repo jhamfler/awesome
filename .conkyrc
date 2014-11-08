@@ -28,8 +28,8 @@ mpd_port 6000
 update_interval 1.0
 update_interval_on_battery 2.0
 diskio_avg_samples 3
-cpu_avg_samples 2
-net_avg_samples 2
+cpu_avg_samples 3
+net_avg_samples 1
 #zeige RAM mit Puffer an
 no_buffers no
 
@@ -46,7 +46,9 @@ draw_borders no
 draw_graph_borders yes
 draw_outline no
 draw_shades no
-use_xft yes
+
+# nice fonts shitty process list when yes
+use_xft no
 xftfont Sans Mono:size=9
 
 # X font when Xft is disabled, you can pick one with program xfontsel
@@ -57,6 +59,9 @@ xftfont Sans Mono:size=9
 #font 9x15
 #font *mintsmild.se*
 #font -*-*-*-*-*-*-34-*-*-*-*-*-*-*
+#font -bitstream-courier 10 pitch-bold-r-normal-*-17-120-*-*-m-0-ascii-0
+#font -*-*-*-*-*-*-14-*-*-*-*-*-*-*
+font -*-clean-*-*-*-*-14-*-*-*-*-*-*-*
 
 out_to_console no
 out_to_stderr no
@@ -91,19 +96,27 @@ own_window_transparent no
 #GiB -> G KiB -> k
 short_units no
 
+#${font Dungeon:style=Bold:pixelsize=20}
 
 TEXT
 ${color #0088bb}CPU0:${color #eeeeee}${cpubar cpu0 9,25} ${freq_g 1}\
 ${color #0088bb} CPU1:${color #eeeeee}${cpubar cpu1 9,25} ${freq_g 2}\
 ${color #0088bb} RAM:${color #eeeeee}${membar 9,25} ${mem}\
-${color #0088bb} Temp:${color #eeeeee}${exec sensors | grep "Core 0" |cut -c 16-22} \
+${color #0088bb} Temp:${color #eeeeee}${execi 5 sensors | grep "Core 0"|awk '{print $3}'|cut -c 2-6}C\
 \
-${color #0088aa} Bat:${color #eeee00}\
+${color #0088aa}  Bat:${color #eeee00}\
 ${if_match "${execi 10 .conkyskripte/charging.sh}"=="1"}${color #33ff33}${endif}\
 ${if_match "${execi 10 ~/.conkyskripte/batt-p.sh}">="90"}${color #33ff33}${endif}\
 ${battery_bar 9,25 CMB1}\
 \
-${color #0088bb} eth0: \
+${color #0088bb} Vol:${color #00ff00}${execi 5 .conkyskripte/volume.sh}\
+${color #0088bb} Git:\
+${if_match "${execi 15 .conkyskripte/git-status-debconfsrv.sh}"=="0"}${color #00ff00}\
+${else}${color #ff0000}${endif}Conf\
+${if_match "${execi 15 .conkyskripte/git-status-awesome.sh}"=="0"}${color #00ff00}\
+${else}${color #ff0000}${endif}Awm\
+\
+${color #0088bb} eth0:\
 ${if_match "${addr}"=="No Address"}${color #ff3333}\
 ${else}${color #33ff33}${endif}${addr}\
 \
@@ -115,55 +128,54 @@ ${color #0088bb} .11:${color #00ff00}${wireless_bitrate wlan0} \
 ${color #0088bb} Down:${color #00ff00}${downspeedf wlan0}\
 ${color #0088bb} Up:${color #00ff00}${upspeedf wlan0}\
 ${endif}\
-\
-${color #0088bb} Vol: ${color #00ff00} ${execi 3 .conkyskripte/volume.sh} \
-${color #0088bb} Git:\
-${if_match "${execi 15 .conkyskripte/git-status-debconfsrv.sh}"=="0"}${color #00ff00}\
-${else}${color #ff0000}${endif} conf\
-${if_match "${execi 15 .conkyskripte/git-status-awesome.sh}"=="0"}${color #00ff00}\
-${else}${color #ff0000}${endif} awm\
 
 ${color #0088bb}CPU2:${color #eeeeee}${cpubar cpu2 9,25} ${freq_g 3}\
 ${color #0088bb} CPU3:${color #eeeeee}${cpubar cpu3 9,25} ${freq_g 4}\
 ${color #0088bb} Puffer:${color #eeeeee}${buffers}\
-${color #0088bb}  Cache:${color #eeeeee}${cached}  \
-${color #0088bb} proc:${color #eeeeee}${running_processes}\
-${if_match "${execi 5 .conkyskripte/eth0-stat.sh}"=="up"}\
-${color #0088bb} eth0:${color #00ff00} ${execi 15 ethtool eth0 2>/dev/null | grep Speed | sed -e 's/^\tSpeed: \(.*Mb\/s\).*/\1/'}\
-${endif}\
+${color #0088bb} Cache:${color #eeeeee}${cached}\
+${color #0088bb} HDD:${color #eeeeee}${fs_bar}\
 ${color #0088bb} HDD-IO:${color #eeeeee}${diskio}\
-${color #0088bb} HDD:${color #eeeeee}${fs_bar} ${fs_used_perc}%\
+${if_match "${execi 10 .conkyskripte/eth0-stat.sh}"=="up"}\
+${color #0088bb}  eth0:${color #00ff00}${execi 15 ethtool eth0 2>/dev/null | grep Speed | sed -e 's/^\tSpeed: \(.*Mb\/s\).*/\1/'}\
+${endif}\
+${color #0088bb} proc:${color #eeeeee}${running_processes}\
 ${color #0088bb} Kernel:${color #eeeeee}${kernel}\
 
 
 
 
 $nodename - $sysname $kernel on $machine
+Entropie: ${entropy_bar 9,270}
 $stippled_hr
 ${color lightgrey}Uptime:$color $uptime ${color lightgrey}- Load:$color $loadavg
-${color lightgrey}CPU Usage:${color #5000a0} ${cpu}% ${cpubar}
-${color black}${cpugraph 000000 5000a0}
-${color lightgrey}RAM Usage:  ${membar 9,70} $color $mem/$memmax - $memperc%
-${color lightgrey}Swap Usage: ${swapbar 9,70} $color $swap/$swapmax - $swapperc%
-${color lightgrey}Processes:$color $processes  ${color grey}Running:$color $running_processes
+${color lightgrey}CPU Usage:${color #5000a0} ${cpu}%   ${color lightgrey}Processes:$color $processes  ${color grey}Running: $color $running_processes
+${cpubar 9,350}
+${color black}${cpugraph 32,350 000000 5000a0}
+${color lightgrey}RAM Usage:     $color $mem/$memmax - $memperc%
+${color lightgrey}${membar 9,350}
+${color lightgrey}Swap Usage:    $color $swap/$swapmax - $swapperc%
+${color lightgrey}${swapbar 9,350}
+${color lightgrey}Buffer Usage:  $color $buffers/$memmax
+${color lightgrey}Cache Usage:   $color $cached/$memmax
 $color$stippled_hr
 ${color lightgrey}Networking:
- Down:${color #8844ee} ${downspeed eth0} k/s${color lightgrey} ${offset 70}Up:${color #22ccff} ${upspeed eth0} k/s
-${color black}${downspeedgraph eth0 32,150 ff0000 0000ff} ${color black}${upspeedgraph eth0 32,150 0000ff ff0000}
-${color lightgrey}File systems:
- / $color${fs_used /}/${fs_size /} ${fs_bar 9,182}
-${color lightgrey}Temperatures:
- CPU:$color ${i2c temp 2}C${color grey} - MB:$color ${i2c temp 1}C
-${font Dungeon:style=Bold:pixelsize=12}${color #88aadd}MPD: $mpd_artist - $mpd_title
-${color #88aadd}${mpd_bar 9,300}
+ Down:${color #8844ee} ${downspeed eth0} ${color lightgrey} ${offset 60}Up:${color #22ccff} ${upspeed eth0}
+${color black}${downspeedgraph eth0 32,170 ff0000 0000ff}${offset 10}${color black}${upspeedgraph eth0 32,170 ff0000 0000ff}
+${color lightgrey}File systems:  $color${fs_used /}/${fs_size /} - ${fs_used_perc}%
+${fs_bar 9,350}
+${color lightgrey}Temperatures: CPU:$color ${acpitemp}C${color grey} - MB:$color ${i2c temp 1}C
+${color #88aadd}MPD: $mpd_artist - $mpd_title
+${color #88aadd}${mpd_bar 9,350}
 ${color #88aadd}$mpd_status
-${color}Name                   PID     CPU%   MEM%
-${alignr 1125}${color #ddaa00} ${top name 1} ${top pid 1} ${top cpu 1} ${top mem 1}
-${alignr 1125}${color lightgrey} ${top name 2} ${top pid 2} ${top cpu 2} ${top mem 2}
-${color lightgrey} ${top name 3} ${top pid 3} ${top cpu 3} ${top mem 3} ${top 3 name}
+${color}Name                     PID    CPU%    MEM%
+${color   #ddaa00} ${top name 1} ${top pid 1}  ${top cpu 1}  ${top mem 1}
+${color lightgrey} ${top name 2} ${top pid 2}  ${top cpu 2}  ${top mem 2}
+${color lightgrey} ${top name 3} ${top pid 3}  ${top cpu 3}  ${top mem 3}
+${color lightgrey} ${top name 4} ${top pid 4}  ${top cpu 4}  ${top mem 4}
 ${color}Mem usage
-${color #ddaa00} ${top_mem name 1} ${top_mem pid 1} ${top_mem cpu 1} ${top_mem mem 1}
-${color lightgrey} ${top_mem name 2} ${top_mem pid 2} ${top_mem cpu 2} ${top_mem mem 2}
-${color lightgrey} ${top_mem name 3} ${top_mem pid 3} ${top_mem cpu 3} ${top_mem mem 3}${alignc}
+${color   #ddaa00} ${top_mem name 1} ${top_mem pid 1}  ${top_mem cpu 1}  ${top_mem mem 1}
+${color lightgrey} ${top_mem name 2} ${top_mem pid 2}  ${top_mem cpu 2}  ${top_mem mem 2}
+${color lightgrey} ${top_mem name 3} ${top_mem pid 3}  ${top_mem cpu 3}  ${top_mem mem 3}
+${color lightgrey} ${top_mem name 4} ${top_mem pid 4}  ${top_mem cpu 4}  ${top_mem mem 4}
 
 
