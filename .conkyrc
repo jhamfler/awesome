@@ -8,7 +8,7 @@ border_outer_margin 0
 stippled_borders 0
 
 #experimentell
-default_bar_size 25 9 
+default_bar_size 350 9 
 default_gauge_size 25 25
 default_graph_size 10 25
 
@@ -145,15 +145,13 @@ ${color #0088bb}CPU2:${color #eeeeee}${cpubar cpu2 9,25} ${freq_g 3}\
 ${color #0088bb} CPU3:${color #eeeeee}${cpubar cpu3 9,25} ${freq_g 4}\
 ${color #0088bb} Puffer:${color #eeeeee}${buffers}\
 ${color #0088bb} Cache:${color #eeeeee}${cached}\
-${color #0088bb} HDD:${color #eeeeee}${fs_bar}\
+${color #0088bb} HDD:${color #eeeeee}${fs_bar 9,25}\
 ${color #0088bb} HDD-IO:${color #eeeeee}${diskio}\
 ${if_match "${execi 10 .conkyskripte/eth0-stat.sh}"=="up"}\
 ${color #0088bb}  eth0:${color #00ff00}${execi 15 ethtool eth0 2>/dev/null | grep Speed | sed -e 's/^\tSpeed: \(.*Mb\/s\).*/\1/'}\
 ${endif}\
 ${color #0088bb} proc:${color #eeeeee}${running_processes}\
 ${color #0088bb} Kernel:${color #eeeeee}${kernel}\
-
-
 
 
 $nodename - $sysname $kernel on $machine
@@ -168,7 +166,9 @@ ${color lightgrey}${membar 9,350}
 ${color lightgrey}Swap Usage:    $color $swap/$swapmax - $swapperc%
 ${color lightgrey}${swapbar 9,350}
 ${color lightgrey}Buffer Usage:  $color $buffers/$memmax
+${execibar 10 ./.conkyskripte/buffer.sh}
 ${color lightgrey}Cache Usage:   $color $cached/$memmax
+${execibar 10 ./.conkyskripte/cache.sh}
 $color$stippled_hr
 ${color lightgrey}Networking:
  Down:${color #8844ee} ${downspeed eth0} ${color lightgrey} ${offset 60}Up:${color #22ccff} ${upspeed eth0}
