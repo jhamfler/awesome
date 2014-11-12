@@ -123,6 +123,11 @@ ${if_match "${execi 10 .conkyskripte/charging.sh}"=="1"}${color #33ff33}${endif}
 ${if_match ${execi 10 ~/.conkyskripte/batt-p.sh}>=90}${color #33ff33}${endif}\
 ${battery_bar 9,25 CMB1}\
 \
+${color #ee3333}\
+${if_match ${execi 10 .conkyskripte/battery-min.sh}>30}${color #eeee33}${endif}\
+${if_match ${execi 10 .conkyskripte/battery-min.sh}>90}${color #33ee33}${endif}\
+ ${execi 10 .conkyskripte/battery-time.sh}\
+\
 ${color #0088bb} Vol:${color #00ff00}${execi 5 .conkyskripte/volume.sh}\
 ${color #0088bb} Git:\
 ${if_match "${execi 15 .conkyskripte/git-status-debconfsrv.sh}"=="0"}${color #00ff00}\
@@ -131,8 +136,8 @@ ${if_match "${execi 15 .conkyskripte/git-status-awesome.sh}"=="0"}${color #00ff0
 ${else}${color #ff0000}${endif}Awm\
 \
 ${color #0088bb} eth0:\
-${if_match "${addr}"=="No Address"}${color #ff3333}\
-${else}${color #cfcfcf}${endif}${addr}\
+${if_match "${addr}"=="No Address"}${color #ff3333}!addr\
+${else}${color #cfcfcf}${addr}$endif\
 \
 ${if_match "${execi 5 .conkyskripte/wlan0-stat.sh}"=="up"}\
 ${color #0088bb} WLAN:${color #66ff66}${wireless_essid wlan0}\
