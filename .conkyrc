@@ -102,25 +102,26 @@ TEXT
 ${color #0088bb}CPU0:${color #eeeeee}${cpubar cpu0 9,25} ${freq_g 1}\
 ${color #0088bb} CPU1:${color #eeeeee}${cpubar cpu1 9,25} ${freq_g 2}\
 ${color #0088bb} RAM:${color #eeeeee}${membar 9,25} ${mem}\
+\
+\
 ${color #0088bb} Temp:${color #eeeeee}\
-\
-\
-${if_match ${acpitemp}>=1}${acpitemp} C \
+${if_match ${acpitemp}<=1}${acpitemp}C\
 ${else}\
 \
-${if_match "${execi 5 sensors | grep "Core 0"|awk '{print $3}'|cut -c 2-6}">="1"}\
-${execi 5 sensors | grep "Core 0"|awk '{print $3}'|cut -c 2-6}C\
+${if_match ${execi 5 sensors|grep "Core 0"|awk '{print $3}'|egrep -o '[0-9]+\.'|egrep -o '[0-9]+'}>=1}\
+${execi 5 sensors|grep "Core 0"|awk '{print $3}'|egrep -o '[0-9]+\.'|egrep -o '[0-9]+'}C\
 ${else}\
 \
-${if_match "${execi 5 sensors | grep "Core0"|awk '{print $3}'|cut -c 2-6}">="1"}\
-${execi 5 sensors | grep "Core0"|awk '{print $3}'|cut -c 2-6}C\
+${if_match ${execi 5 sensors|grep "Core0"|awk '{print $3}'|egrep -o '[0-9]+\.'|egrep -o '[0-9]+'}>=1}\
+${execi 5 sensors|grep "Core0"|awk '{print $3}'|egrep -o '[0-9]+\.'|egrep -o '[0-9]+'}C\
 ${else}${color #bb2222}noDev\
 ${endif}${endif}${endif}\
 \
 \
-${color #0088aa}  Bat:${color #eeee00}\
+${color #0088aa} Bat:${color #eeee00}\
 ${if_match "${execi 10 .conkyskripte/charging.sh}"=="1"}${color #33ff33}${endif}\
 ${if_match ${execi 10 ~/.conkyskripte/batt-p.sh}>=90}${color #33ff33}${endif}\
+${execi 10 ~/.conkyskripte/batt-p.sh}%\
 ${battery_bar 9,25 CMB1}\
 \
 ${color #0088bb} Vol:${color #00ff00}${execi 5 .conkyskripte/volume.sh}\
@@ -130,9 +131,8 @@ ${else}${color #ff0000}${endif}Conf\
 ${if_match "${execi 15 .conkyskripte/git-status-awesome.sh}"=="0"}${color #00ff00}\
 ${else}${color #ff0000}${endif}Awm\
 \
-${color #0088bb} eth0:\
 ${if_match "${addr}"=="No Address"}${color #ff3333}\
-${else}${color #cfcfcf}${endif}${addr}\
+${else}${color #0088bb} eth0: ${color #cfcfcf}$addr${endif}\
 \
 ${if_match "${execi 5 .conkyskripte/wlan0-stat.sh}"=="up"}\
 ${color #0088bb} WLAN:${color #66ff66}${wireless_essid wlan0}\
