@@ -121,7 +121,7 @@ ${endif}${endif}${endif}\
 ${color #0088aa} Bat:${color #eeee00}\
 ${if_match "${execi 10 .conkyskripte/charging.sh}"=="1"}${color #33ff33}${endif}\
 ${if_match ${execi 10 ~/.conkyskripte/batt-p.sh}>=90}${color #33ff33}${endif}\
-${execi 10 ~/.conkyskripte/batt-p.sh}%\
+${execi 10 ~/.conkyskripte/batt-p.sh}% \
 ${battery_bar 9,25 CMB1}\
 \
 ${color #0088bb} Vol:${color #00ff00}${execi 5 .conkyskripte/volume.sh}\
