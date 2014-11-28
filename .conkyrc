@@ -125,9 +125,10 @@ ${execi 10 ~/.conkyskripte/batt-p.sh}% \
 ${battery_bar 9,25 CMB1}\
 \
 ${color #0088bb} Vol:${color #00ff00}${execi 5 .conkyskripte/volume.sh}\
-${color #0088bb} Git:\
-${if_match "${execi 15 .conkyskripte/git-status-debconfsrv.sh}"=="0"}${color #00ff00}\
-${else}${color #ff0000}${endif}Conf\
+${color #0088bb} Git:${color #ff0000}\
+${if_match "${execi 15 ~/.conkyskripte/git-status-debconfsrv.sh}"=="1"}${color #33ff33}${endif}\
+${if_match "${execi 15 ~/.conkyskripte/git-status-debconfsrv.sh}"=="2"}${color #11ff11}${endif}\
+Conf\
 ${if_match "${execi 15 .conkyskripte/git-status-awesome.sh}"=="0"}${color #00ff00}\
 ${else}${color #ff0000}${endif}Awm\
 \

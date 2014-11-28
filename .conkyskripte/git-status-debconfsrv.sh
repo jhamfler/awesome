@@ -1,3 +1,12 @@
 #!/bin/sh
-cd ~/git/debconfsrv
-git status --porcelain | wc -l
+cd ~/git/debconfsrv/
+lines=$(git status --porcelain | wc -l)
+if [ "$lines" != "0" ]; then
+  echo "1"
+  exit
+fi
+push=$(git diff --stat origin)
+if [ "$push" != "" ]; then
+  echo "2"
+  exit
+fi
