@@ -134,20 +134,17 @@ ${color #0088bb} Git:\
 ${color #ff0000}\
 ${if_match "${execi 15 ~/.conkyskripte/git-status-debconfsrv.sh}"=="1"}${color #eeee00}${endif}\
 ${if_match "${execi 15 ~/.conkyskripte/git-status-debconfsrv.sh}"=="2"}${color #11ff11}${endif}\
-Conf\
+Conf:${execi 15 ~/.conkyskripte/git-status-debconfsrv-head.sh}\
+${color #0088bb}|\
 ${color #ff0000}\
 ${if_match "${execi 15 ~/.conkyskripte/git-status-awesome.sh}"=="1"}${color #eeee00}${endif}\
 ${if_match "${execi 15 ~/.conkyskripte/git-status-awesome.sh}"=="2"}${color #11ff11}${endif}\
-Awm\
+Awm:${execi 15 ~/.conkyskripte/git-status-awesome-head.sh}\
 \
-<<<<<<< HEAD
+${if_match "${addr}"!="No Address"}\
 ${color #0088bb} eth0:\
-${if_match "${addr}"=="No Address"}${color #ff3333}!addr\
-${else}${color #cfcfcf}${addr}$endif\
-=======
-${if_match "${addr}"=="No Address"}${color #ff3333}\
-${else}${color #0088bb} eth0: ${color #cfcfcf}$addr${endif}\
->>>>>>> d9c593ba8895828cd66ae11de175cefac2cd5ee2
+${color #cfcfcf}${addr}\
+$endif\
 \
 ${if_match "${execi 5 .conkyskripte/wlan0-stat.sh}"=="up"}\
 ${color #0088bb} WLAN:${color #66ff66}${wireless_essid wlan0}\
