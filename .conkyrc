@@ -136,7 +136,7 @@ ${if_match "${execi 15 .conkyskripte/git-status-awesome.sh}"=="0"}${color #00ff0
 ${else}${color #ff0000}${endif}Awm\
 \
 ${color #0088bb} eth0:\
-${if_match "${addr}"=="No Address"}${color #ff3333}!addr\
+${if_match "${addr}"=="No Address"}${color #ff3333}!IP\
 ${else}${color #cfcfcf}${addr}$endif\
 \
 ${if_match "${execi 5 .conkyskripte/wlan0-stat.sh}"=="up"}\
