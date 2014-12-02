@@ -105,7 +105,7 @@ ${color #0088bb} RAM:${color #eeeeee}${membar 9,25} ${mem}\
 \
 \
 ${color #0088bb} Temp:${color #eeeeee}\
-${if_match ${acpitemp}<=1}${acpitemp}C\
+${if_match ${acpitemp}>=1}${acpitemp}C\
 ${else}\
 \
 ${if_match ${execi 5 sensors|grep "Core 0"|awk '{print $3}'|egrep -o '[0-9]+\.'|egrep -o '[0-9]+'}>=1}\
