@@ -117,6 +117,10 @@ ${execi 5 sensors|grep "Core0"|awk '{print $3}'|egrep -o '[0-9]+\.'|egrep -o '[0
 ${else}${color #bb2222}noDev\
 ${endif}${endif}${endif}\
 \
+${color #ff3333} \
+${if_match "${execi 8 ~/.conkyskripte/presenceState.sh hannes}"=="1"}${color #33ff33}${endif}\
+L0.13\
+\
 \
 ${color #0088aa} Bat:${color #eeee00}\
 ${if_match "${execi 10 .conkyskripte/charging.sh}"=="1"}${color #33ff33}${endif}\
