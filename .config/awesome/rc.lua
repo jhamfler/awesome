@@ -245,7 +245,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
-    awful.key({ modkey, "Control" }, "0", function () awful.util.spawn_with_shell("~/.conkyskripte/toggleState.sh hannes") end),
+    awful.key({ modkey, "Control" }, "+", function () awful.util.spawn_with_shell("~/.conkyskripte/toggleStateOn.sh hannes") end),
+    awful.key({ modkey, "Control" }, "-", function () awful.util.spawn_with_shell("~/.conkyskripte/toggleStateOff.sh hannes") end),
 
 
 -- Lautstärketasten nutzen    folgendes in /etc/xdg/rc-lua
