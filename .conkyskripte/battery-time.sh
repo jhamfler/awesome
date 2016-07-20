@@ -1,2 +1,3 @@
 #!/bin/sh
-acpi -b | cut -c 30-34
+acpi -b | grep -Eo "[0-9]+:[0-9]+:[0-9]+" 
+

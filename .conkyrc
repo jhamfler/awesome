@@ -99,8 +99,7 @@ short_units no
 #${font Dungeon:style=Bold:pixelsize=20}
 
 TEXT
-${color #0088bb}CPU0:${color #eeeeee}${cpubar cpu0 9,25} ${freq_g 1}\
-${color #0088bb} CPU1:${color #eeeeee}${cpubar cpu1 9,25} ${freq_g 2}\
+${color #0088bb}CPU0:${color #eeeeee}${cpubar cpu0 9,25} ${freq_g 0}\
 ${color #0088bb} RAM:${color #eeeeee}${membar 9,25} ${mem}\
 \
 \
@@ -159,9 +158,7 @@ ${color #0088bb} DL:${color #66ff66}${downspeedf wlan0}\
 ${color #0088bb} UL:${color #66ff66}${upspeedf wlan0}\
 ${endif}\
 
-${color #0088bb}CPU2:${color #eeeeee}${cpubar cpu2 9,25} ${freq_g 3}\
-${color #0088bb} CPU3:${color #eeeeee}${cpubar cpu3 9,25} ${freq_g 4}\
-${color #0088bb} Puffer:${color #eeeeee}${buffers}\
+${color #0088bb}Puffer:${color #eeeeee}${buffers}\
 ${color #0088bb} Cache:${color #eeeeee}${cached}\
 ${color #0088bb} ${offset 1}HDD:${color #eeeeee}${fs_bar 9,25}\
 ${color #0088bb} HDD-IO:${color #eeeeee}${diskio}\
