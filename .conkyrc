@@ -75,8 +75,8 @@ own_window_class Conky
 own_window_transparent no
 #own_window_hints undecorated,below,sticky,skip_pager
 own_window_hints below,sticky,skip_pager
-minimum_size 1366 10
-maximum_width 1366
+minimum_size 5760 2160
+maximum_width 5760
 gap_x 1
 gap_y 20
 #own_window_type desktop
@@ -99,8 +99,7 @@ short_units no
 #${font Dungeon:style=Bold:pixelsize=20}
 
 TEXT
-${color #0088bb}CPU0:${color #eeeeee}${cpubar cpu0 9,25} ${freq_g 1}\
-${color #0088bb} CPU1:${color #eeeeee}${cpubar cpu1 9,25} ${freq_g 2}\
+${color #0088bb}CPU:${color #eeeeee}${cpubar cpu0 9,25} ${freq_g 1}\
 ${color #0088bb} RAM:${color #eeeeee}${membar 9,25} ${mem}\
 \
 \
@@ -134,6 +133,12 @@ ${if_match ${execi 10 .conkyskripte/battery-min.sh}>90}${color #33ee33}${endif}\
  ${execi 10 .conkyskripte/battery-time.sh}\
 \
 ${color #0088bb} Vol:${color #00ff00}${execi 5 .conkyskripte/volume.sh}\
+\
+${if_match "${addr}"!="No Address"}\
+${color #0088bb} eth0:\
+${color #cfcfcf}${addr}\
+$endif\
+\
 ${color #0088bb} Git:\
 ${color #ff0000}\
 ${if_match "${execi 15 ~/.conkyskripte/git-status-debconfsrv.sh}"=="1"}${color #eeee00}${endif}\
@@ -145,11 +150,6 @@ ${if_match "${execi 15 ~/.conkyskripte/git-status-awesome.sh}"=="1"}${color #eee
 ${if_match "${execi 15 ~/.conkyskripte/git-status-awesome.sh}"=="2"}${color #11ff11}${endif}\
 Awm:${execi 15 ~/.conkyskripte/git-status-awesome-head.sh}\
 \
-${if_match "${addr}"!="No Address"}\
-${color #0088bb} eth0:\
-${color #cfcfcf}${addr}\
-$endif\
-\
 ${if_match "${execi 5 .conkyskripte/wlan0-stat.sh}"=="up"}\
 ${color #0088bb} WLAN:${color #66ff66}${wireless_essid wlan0}\
 ${color #0088bb}${offset 5}${color #66ff66}${wireless_link_bar 9,25 wlan0}\
@@ -159,17 +159,14 @@ ${color #0088bb} DL:${color #66ff66}${downspeedf wlan0}\
 ${color #0088bb} UL:${color #66ff66}${upspeedf wlan0}\
 ${endif}\
 
-${color #0088bb}CPU2:${color #eeeeee}${cpubar cpu2 9,25} ${freq_g 3}\
-${color #0088bb} CPU3:${color #eeeeee}${cpubar cpu3 9,25} ${freq_g 4}\
+${color #0088bb}proc:${color #eeeeee}${running_processes}\
 ${color #0088bb} Puffer:${color #eeeeee}${buffers}\
 ${color #0088bb} Cache:${color #eeeeee}${cached}\
 ${color #0088bb} ${offset 1}HDD:${color #eeeeee}${fs_bar 9,25}\
 ${color #0088bb} HDD-IO:${color #eeeeee}${diskio}\
 ${if_match "${execi 10 .conkyskripte/eth0-stat.sh}"=="up"}\
-${color #0088bb}  eth0:${color #cfcfcf}${execi 15 ethtool eth0 2>/dev/null | grep Speed | sed -e 's/^\tSpeed: \(.*Mb\/s\).*/\1/'}\
+${color #0088bb}  eth0:${color #cfcfcf}${execi 15 /sbin/ethtool eth0 2>/dev/null | grep Speed | sed -e 's/^\tSpeed: \(.*Mb\/s\).*/\1/'}\
 ${endif}\
-${color #0088bb} proc:${color #eeeeee}${running_processes}\
-${color #0088bb} Kernel:${color #eeeeee}${kernel}\
 \
 \
 
